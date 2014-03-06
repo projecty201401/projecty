@@ -1,0 +1,26 @@
+<div class="col-lg-offset-4 col-lg-4">
+    <div class="panel">
+        <div class="panel-heading">Sign up</div>
+        <form name="userSignup" class="form-inline navbar navbar-right" role="signup" novalidate>
+            <div class="form-group">
+                <label class="control-label" for="userEmail">
+                    <input type="email" id="userEmail" name="userEmail" class="form-control" placeholder="Email" ng-model="user.userEmail" ng-required ng-unique-email>
+                    <span ng-show="showError(userSignup.userEmail, 'email')">Invalid Email</span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="userPass">
+                    <input type="password" id="userPass" class="form-control" placeholder="Password" ng-minlength='4' ng-model="user.userPass" ng-required>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="userPassValid">
+                    <input type="password" id="userPassValid" class="form-control" placeholder="Re-enter password" ng-minlength='4' ng-model="user.userPass" ng-required>
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Sign up" ng-disabled="!canSave()" ng-click="">
+            </div>
+        </form>
+    </div>
+</div>

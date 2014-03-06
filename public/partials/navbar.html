@@ -1,0 +1,27 @@
+<div ng-controller="NavCtrl">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li class="active"><a ui-sref="index">Project Y</a></li>
+            </ul>
+            <form class="form-inline navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Topic, Author, etc.">
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+            <form name="userLogin" class="form-inline navbar navbar-right" role="login" ng-show="!isVisible">
+                <div class="form-group">
+                    <input type="email" name="userEmail" class="form-control" ng-model="user.userEmail">
+                    <span ng-show="showError(userLogin.userEmail, 'email')">Invalid Email</span>
+                    <input type="password" class="form-control" ng-minlength='4' ng-model="user.userPass">
+                    <button type="submit" class="btn" ng-disabled="!canSave()" ng-click="login($event)">Sign in</button>
+                </div>
+                <div>(or <a ui-sref="signup">sign up now</a>)</div>
+            </form>
+            <ul class="nav navbar navbar-right" ng-show="isVisible">
+                <li class="active"><a ui-sref="profile">{{user.userEmail}}</a></li>
+            </ul>
+        </div><!-- /.container-fluid -->
+    </nav>
+</div>

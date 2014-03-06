@@ -1,0 +1,16 @@
+<div class="row text-center">
+    <div class="span12">
+        <article xmlns="http://www.w3.org/1999/html">
+            <!---- calls twice, maybe controller called twice? ---->
+            <img ng-src="/uploads/{{articleData.titleImg}}">
+            <h1>{{articleData.title}}</h1>
+            <div ng-repeat="paragraph in articleData.body">
+                <div ng-switch on="paragraph.type">
+                    <div ng-switch-when="text">{{paragraph.text}}</div>
+                    <img ng-switch-when="image" ng-src="paragraph.imagePath">
+                    <div ng-switch-default>default</div>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>

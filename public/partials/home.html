@@ -1,0 +1,8 @@
+<div class="row text-center">
+    <div class="span12">
+        <articlepreview ng-repeat="article in articles" ng-transclude>
+            <a ui-sref="article({id: article._id})">{{article.title}}</a>
+            <p>{{article.intro}}</p>
+        </articlepreview>
+    </div>
+</div>
