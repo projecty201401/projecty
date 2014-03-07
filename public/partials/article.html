@@ -1,16 +1,23 @@
-<div class="row text-center">
-    <div class="span12">
-        <article xmlns="http://www.w3.org/1999/html">
-            <!---- calls twice, maybe controller called twice? ---->
-            <img ng-src="/uploads/{{articleData.titleImg}}">
-            <h1>{{articleData.title}}</h1>
-            <div ng-repeat="paragraph in articleData.body">
-                <div ng-switch on="paragraph.type">
-                    <div ng-switch-when="text">{{paragraph.text}}</div>
-                    <img ng-switch-when="image" ng-src="paragraph.imagePath">
-                    <div ng-switch-default>default</div>
-                </div>
+
+<img ng-src="/uploads/{{articleData.titleImg}}">
+<div class="articleLink">
+<!--    <a href="#"><img src="authors/3.jpeg" alt="Zach Hamed" class="userImage" /></a> -->
+    <h1>{{articleData.title}}</h1>
+    <ul>
+        <li ng-repeat="tag in articleData.tags">
+            <a ui-sref="tag({id:tag})">{{tag}}</a>
+        </li>
+    </ul>
+</div>
+<div class="temp">
+    <article xmlns="http://www.w3.org/1999/html">
+        <!---- calls twice, maybe controller called twice? ---->
+        <div ng-repeat="paragraph in articleData.body">
+            <div ng-switch on="paragraph.type">
+                <p name="2b37" ng-switch-when="text">{{paragraph.text}}</p>
+                <img ng-switch-when="image" ng-src="paragraph.imagePath">
+                <p ng-switch-default>default</p>
             </div>
-        </article>
-    </div>
+        </div>
+    </article>
 </div>
