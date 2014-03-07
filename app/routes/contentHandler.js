@@ -11,6 +11,8 @@ function ContentHandler(db){
     this.displayMainPage = function(req, res, next){
         "use strict";
 
+        console.log(req.connection.remoteAddress);
+
 /*	if(!req.username){
 	    console.log("Could not identify user...redirect to login.");
 	    return res.redirect('/login');

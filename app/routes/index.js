@@ -23,6 +23,10 @@ module.exports = exports = function(app, db){
     // signup including checks
     app.post('/signup/check/useremail', sessionHandler.checkUserEmail);
 
+    // geolocation lookup
+    app.get('/zip/geo', contentHandler.getGeolocation);
+    // route for /zip/ip
+
     // Others
     app.post('*', function(req, res, next){
         console.log(req);

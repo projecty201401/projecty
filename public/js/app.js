@@ -10,7 +10,8 @@ angular.module('pyApp', [
     'pyApp.filters',
     'pyApp.directives',
     'pyApp.services',
-    'pyApp.controllers'
+    'pyApp.controllers',
+    'pyApp.providers'
 ]).constant('PY_APP_CONSTANTS', {
       'REGEX_EMAIL': /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b/
     }).config([
@@ -18,12 +19,10 @@ angular.module('pyApp', [
         '$routeProvider',
         '$urlRouterProvider',
         '$locationProvider',
-        'ArticleProvider',
-        function($stateProvider, $routeProvider, $urlRouterProvider, $locationProvider) {
+        'geolocationProvider',
+        function($stateProvider, $routeProvider, $urlRouterProvider, $locationProvider, geolocationProvider) {
             $locationProvider.html5Mode(true);
-
             $routeProvider.otherwise({redirectTo: '/test'});
-
             $stateProvider.state('index', {
                 url:'/',
                 templateUrl:'partials/home.html',
@@ -56,5 +55,6 @@ angular.module('pyApp', [
                     templateUrl:'partials/profile.security.html',
                     controller:'ProfileCtrl'
                 });
-
-}]);
+}]).run(['geolocation', function(geolocation){
+        var a = geolocation.getZipCodes();
+    }]);
