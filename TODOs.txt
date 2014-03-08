@@ -1,0 +1,2 @@
+- Resolve JSON vulnerability --> http://docs.angularjs.org/api/ng/service/$http --> http://haacked.com/archive/2008/11/20/anatomy-of-a-subtle-json-vulnerability.aspx/
+- Set cookie on req.session

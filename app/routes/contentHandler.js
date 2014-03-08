@@ -1,4 +1,5 @@
 var ArticlesDAO = require('./../articles').ArticlesDAO;
+var LocationDAO = require('./../geo').LocationDAO;
 var ObjectId = require('mongodb').ObjectID;
 var async = require('async');
 var path = require('path');
@@ -7,6 +8,7 @@ function ContentHandler(db){
     "use strict";
 
     var articles = new ArticlesDAO(db);
+    var location = new LocationDAO(db);
 
     this.displayMainPage = function(req, res, next){
         "use strict";
@@ -39,6 +41,18 @@ function ContentHandler(db){
         articles.getArticle(_id, function(err, content){
             if(err) return res.json(500, err);
             res.json(200, content);
+        });
+    };
+
+    this.getGeolocation = function(req, res, next){
+        var position = {
+            'lat': req.query.lat,
+            'long': req.query.long
+        };
+
+        location.getGeolocation(position, function(err, locations){
+            if(err) return res.json(403, err);
+            res.json(200, locations);
         });
     };
 }

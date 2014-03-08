@@ -32,8 +32,8 @@ angular.module('pyApp.providers', [])
                 config.url = '/zip/geo';
                 config.method = 'GET';
                 config.params = {
-                    'LAT': this.geoData.coords.latitude,
-                    'LONG': this.geoData.coords.longitude
+                    'lat': this.geoData.coords.latitude,
+                    'long': this.geoData.coords.longitude
                 };
 
                 $http(config)
@@ -63,29 +63,29 @@ angular.module('pyApp.providers', [])
                 );
             };
 
-            GeolocationServices.prototype.getZipCodes = function(){
+            GeolocationServices.prototype.getZipCodes = function(callback){
                 var that = this;
                 $.when(this.setGeoData()).then(function(){
                     that.getZipCodesByGeoLoc(function(err, data, status){
                         if(err){
                             that.getZipCodesByIp(function(err, data, status){
-                                if(err) return console.log(err);
+                                if(err) return callback(err, null);
                                 that.dataObj.data = data;
                                 that.dataObj.status = status;
-                                return that.dataObj;
+                                callback(null, that.dataObj);
                             });
                         }else{
                             that.dataObj.data = data;
                             that.dataObj.status = status;
-                            return that.dataObj;
+                            callback(null, that.dataObj);
                         }
                     });
                 }, function(){
                     that.getZipCodesByIp(function(err, data, status){
-                        if(err) return console.log(err);
+                        if(err) return callback(err, null);
                         that.dataObj.data = data;
                         that.dataObj.status = status;
-                        return that.dataObj;
+                        callback(null, that.dataObj);
                     });
                 });
             };

@@ -21,6 +21,7 @@ angular.module('pyApp', [
         '$locationProvider',
         'geolocationProvider',
         function($stateProvider, $routeProvider, $urlRouterProvider, $locationProvider, geolocationProvider) {
+            geolocationProvider.setGeoData();
             $locationProvider.html5Mode(true);
             $routeProvider.otherwise({redirectTo: '/test'});
             $stateProvider.state('index', {
@@ -56,5 +57,7 @@ angular.module('pyApp', [
                     controller:'ProfileCtrl'
                 });
 }]).run(['geolocation', function(geolocation){
-        var a = geolocation.getZipCodes();
+        geolocation.getInfoByGeoLoc(function(err, data, status){
+            console.log(data);
+        });
     }]);
