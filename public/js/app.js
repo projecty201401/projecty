@@ -5,7 +5,7 @@ angular.module('pyApp', [
     'ngRoute',
     'ngResource',
     'ui.router',
-    'pyApp.article',
+    'pyApp.factories',
     'pyApp.user',
     'pyApp.filters',
     'pyApp.directives',
@@ -56,8 +56,5 @@ angular.module('pyApp', [
                     templateUrl:'partials/profile.security.html',
                     controller:'ProfileCtrl'
                 });
-}]).run(['geolocation', function(geolocation){
-        geolocation.getInfoByGeoLoc(function(err, data, status){
-            console.log(data);
-        });
+}]).run([function(){
     }]);

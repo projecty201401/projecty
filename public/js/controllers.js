@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('pyApp.controllers', ['ui.router', 'pyApp.user', 'pyApp.article'])
+angular.module('pyApp.controllers', ['ui.router', 'pyApp.user', 'pyApp.factories'])
     .controller('ArticleCtrl', ['$stateParams', function($stateParams){
 
     }])
@@ -50,8 +50,13 @@ angular.module('pyApp.controllers', ['ui.router', 'pyApp.user', 'pyApp.article']
                     });
             };
         }])
-    .controller('HomeCtrl', ['$scope', function($scope){
-        $scope.articles = articles.firstCall;
+    .controller('HomeCtrl', ['$scope', 'geolocation', 'article', function($scope, geolocation, article){
+        geolocation.getInfoByGeoLoc(function(obj){
+            console.log(obj);
+            article.get({'q': obj}, function(response, headers){
+                $scope.articles = response.results;
+            });
+        });
     }])
     .controller('SignupCtrl', ['$scope', function($scope){
         $scope.isVisible = false;
@@ -67,9 +72,8 @@ angular.module('pyApp.controllers', ['ui.router', 'pyApp.user', 'pyApp.article']
     .controller('ProfileCtrl', [function(){
 
     }])
-    .controller('ArticleCtrl', ['Article', '$stateParams', '$scope', function(Article, $stateParams, $scope){
-        var article = new Article();
-        article.api.get({'id': $stateParams.id}).$promise.then(function(data){
+    .controller('ArticleCtrl', ['article', '$stateParams', '$scope', function(article, $stateParams, $scope){
+        article.get({'id': $stateParams.id}).$promise.then(function(data){
             $scope.articleData = data;
         }, function(err){
             console.log(JSON.stringify(err));

@@ -14,7 +14,8 @@ module.exports = exports = function(app, db){
     app.get('/', contentHandler.displayMainPage);
 
     // article routes
-    app.get('/article/:id', contentHandler.getArticle);
+    app.get('/articles', contentHandler.getArticlesByLocation);
+    app.get('/articles/:id', contentHandler.getArticle);
 
     // Login and logout
 //    app.get('/logout', TCC.logout);

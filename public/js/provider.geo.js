@@ -22,12 +22,26 @@ angular.module('pyApp.providers', [])
 
         this.$get = ['$http', function geolocationFactory($http){
             function GeolocationServices(geoData){
-                var that = this;
                 this.dataObj = {};
                 this.googleResultTypes = ['neighborhood','administrative_area_level_2','country','postal_code'];
             }
 
-            GeolocationServices.prototype.getInfoByGeoLoc = function(callback){
+            GeolocationServices.prototype.formatResultArray = function(err, trigger, obj, data, status, cb){
+                if(!err && data.status === 'OK' && data.results){
+                    data.results.forEach(function(val){ // ToDo: forEach-functions are blocking!
+                        val.address_components.forEach(function(el, index){
+                            obj[el.types[0]] = el.long_name;
+                        });
+                        console.log('trigger: ' + trigger);
+                    });
+                }
+                if(trigger){
+                    console.log('callback triggered');
+                    cb(obj);
+                }
+            };
+
+            GeolocationServices.prototype.getInfoByGeoLoc = function(cb){
 
                 // ToDo: based on result array (keywords/tags) make call to server
                 // ToDo: based on result array sent to server find articles in db
@@ -36,6 +50,10 @@ angular.module('pyApp.providers', [])
                 var that = this;
 
                 $.when(geoData).done(function(status, position){
+                    var counter = 0;
+                    var trigger = false;
+                    var obj = {};
+
                     for(var i = 0, len = that.googleResultTypes.length; i < len; i++){
                         that.geoData = position;
                         var config = {};
@@ -52,11 +70,15 @@ angular.module('pyApp.providers', [])
 
                         $http(config)
                             .success(function(data, status){
-                                callback(null, data, status);
+                                counter++;
+                                counter === len ? trigger = true : trigger = false;
+                                that.formatResultArray(null, trigger, obj, data, status, cb);
                             })
                             .error(function(data, status){
-                                var err = new Error('Error: GET by geoloc')
-                                callback(err, data, status);
+                                counter++;
+                                counter === len ? trigger = true : trigger = false;
+                                var err = new Error('Error: GET by geoloc');
+                                that.formatResultArray(err, trigger, obj, data, status, cb);
                             }
                         );
                     }

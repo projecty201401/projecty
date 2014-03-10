@@ -10,8 +10,8 @@ function ArticlesDAO(db){
 
     var articlesColl = db.collection('articles');
 
-    this.getArticles = function(callback){
-        articlesColl.find().toArray(function(err, docs){
+    this.getArticlesByLocation = function(arr, callback){
+        articlesColl.find({'location':{'$all': arr}}).toArray(function(err, docs){
             if(err) return callback(err, null);
             callback(null, docs);
         });
