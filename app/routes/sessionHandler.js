@@ -7,48 +7,41 @@ function SessionHandler(db){
     var sessions = new SessionDAO(db);
 
     this.isLoggedInMiddleware = function(req, res, next){
-	var sessionId = req.cookies.session;
-	sessions.getUsername(sessionId, function(err, username){
-	    "use strict";
-	    
-	    if(!err && username){
-		req.username = username;
-	    }
-	    return next();
-	});
+        var sessionId = req.cookies.session;
+        sessions.getUsername(sessionId, function(err, username){
+            "use strict";
+
+            if(!err && username){
+                req.username = username; // set new SID here to avoid SID fixation?
+            }
+            return next();
+        });
     };
 
-    this.handleLoginReq = function(req, res, next){
+    this.handleLoginReq = function(username, password, callback){
         "use strict";
-
-        console.log(req.body);
-
-        var username = req.body.userEmail;
-        var password = req.body.userPass;
 
         users.validateLogin(username, password, function(err, user){
             "use strict";
 
             if(err){
                 if(err.no_such_user){
-                    return res.json(403, {username:username, login_error:err.no_such_user}); // Adapt template!
-                }else if (err.invalid_password) {
-                    return res.json(403, {username:username, login_error:err.invalid_password}); // Adapt template!
-                }else {
+                    return callback(403, {username:username, login_error:err.no_such_user}, null, null); // Adapt template!
+                }else if(err.invalid_password){
+                    return callback(403, {username:username, login_error:err.invalid_password}, null, null); // Adapt template!
+                }else{
                     // Some other kind of error
-                    return next(err); // Check what is doing!
+                    return callback('undefined error', err, null, null); // Check what is doing!
                 }
             }
 
             sessions.startSession(user['_id'], function(err, sessionId){
                 "use strict";
 
-                if(err) return next(err);
-
-                res.cookie('session', sessionId);
+                if(err) return callback(500, err, null, null);
 
                 // send user object from fn users.validateLogin
-                res.json(200, user);
+                callback(200, null, user, sessionId);
             });
         });
     };

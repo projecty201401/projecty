@@ -7,12 +7,13 @@ angular.module('pyApp.controllers', ['ui.router', 'pyApp.user', 'pyApp.factories
 
     }])
     .controller('NavCtrl', [
+        '$rootScope',
         '$scope',
         'User',
         'PY_APP_CONSTANTS',
-        function($scope, User, PY_APP_CONSTANTS) {
+        function($rootScope, $scope, user, PY_APP_CONSTANTS) {
             $scope.constants = PY_APP_CONSTANTS;
-            $scope.isVisible = false;
+            $scope.isLoggedin = false;
 
             $scope.getCssClasses = function(ngModelController){
                 return {
@@ -34,29 +35,40 @@ angular.module('pyApp.controllers', ['ui.router', 'pyApp.user', 'pyApp.factories
                 ev.preventDefault();
                 ev.stopPropagation();
 
-                // create new User instance and send login information to server
-                var user = new User();
-                user.data = $scope.user;
+                console.log($scope.user);
 
-                if(!user.data.userEmail) user.data.userEmail = "";
-                if(!user.data.userPass) user.data.userPass = "";
+                if(!$scope.user.userEmail) $scope.user.userEmail = "";
+                if(!$scope.user.userPass) $scope.user.userPass = "";
 
-                if(user.data)
-                    user.api.login(user.data).$promise.then(function(data){
-                        $scope.isVisible = true;
-                        $scope.user.isLoggedIn = true;
+                if($scope.user)
+                    user.api.login($scope.user).$promise.then(function(data){
+                        $rootScope.message = 'Authentication successful.';
+                        $rootScope.userEmail = $scope.user.userEmail;
+                        $scope.isLoggedin = true;
                     }, function(error){
+                        $rootScope.message = 'Authentication failed.';
                         console.log(JSON.stringify(error));
                     });
             };
         }])
+    .controller('LogoutCtrl', ['$rootScope', '$scope', '$http', 'User', function($rootScope, $scope, $http, user){
+        $scope.userEmail = $rootScope.userEmail;
+
+        // Registering event listener for route change
+        $rootScope.logout();
+        user.isLoggedin = false;
+    }])
     .controller('HomeCtrl', ['$scope', 'geolocation', 'article', function($scope, geolocation, article){
         geolocation.getInfoByGeoLoc(function(obj){
             console.log(obj);
             article.get({'q': obj}, function(response, headers){
                 $scope.articles = response.results;
+                $('#preloader').hide();
             });
         });
+    }])
+    .controller('PersonalCtrl', ['$scope', function($scope){
+        console.log($scope);
     }])
     .controller('SignupCtrl', ['$scope', function($scope){
         $scope.isVisible = false;

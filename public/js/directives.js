@@ -14,7 +14,7 @@ angular.module('pyApp.directives', []).
             }
         };
     }).
-    directive('loginformhome', function(){
+    directive('loginformhome', function(){ // in use?
     return {
         restrict:"E",
         scope:{
@@ -63,4 +63,19 @@ angular.module('pyApp.directives', []).
         };
     }])
     .directive('ngArticle', [function(){
+    }])
+    .directive('ngLogout', ['$rootScope', function($rootScope){
+        return {
+            require:'?form',
+            link: function(scope, el, attrs, ctrl){
+                $rootScope.$on('$stateChangeSuccess', function(ev, currentState, currentParams){
+                    if(currentState.url === '/logout'){
+                        scope.user.userEmail = "";
+                        scope.user.userPass = "";
+                        scope.isLoggedin = false;
+                    }
+                });
+            }
+
+        };
     }]);

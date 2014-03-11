@@ -1,10 +1,8 @@
-angular.module('pyApp.user', ['ngResource']).factory('User', ['$resource', function($resource){
-    return function(){
-        this.isLoggedIn = false;
-        this.api = $resource('/login', {}, {
-            login: {
-                method: 'POST'
-            }
-        });
-    };
+angular.module('pyApp.user', ['ngResource']).service('User', ['$resource', function($resource){
+    this.isLoggedin = false;
+    this.api = $resource('/login', {}, {
+        login: {
+            method: 'POST'
+        }
+    });
 }]);

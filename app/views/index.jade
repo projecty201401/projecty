@@ -16,10 +16,8 @@ html(lang='en')
     .includeNg(ng-include="'partials/navbar.html'")
     #main.container(ui-view)
     img(id='preloader', src='/img/preloader.gif')
-    script.
-      var articles = !{articles}
-      setTimeout(function(){ $('#preloader').hide(); }, 1000);
     script(src='lib/jquery-1.11.0.min.js')
+    script(src='lib/bootstrap/js/bootstrap.min.js')
     script(src='lib/angular/angular.js')
     script(src='lib/angular/angular-route.min.js')
     script(src='lib/angular/angular-ui-router.js')

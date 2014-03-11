@@ -1,12 +1,56 @@
 var SessionHandler = require('./sessionHandler');
 var ContentHandler = require('./contentHandler');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
 //add error handler?
 
 module.exports = exports = function(app, db){
 
     var sessionHandler = new SessionHandler(db);
     var contentHandler = new ContentHandler(db);
-    
+
+    // ====================================================================
+
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    passport.use(new LocalStrategy(
+        {
+            usernameField:'userEmail',
+            passwordField:'userPass'
+        },
+        function(username, password, done){
+            sessionHandler.handleLoginReq(username, password, function(status, err, user, sessionId){
+                if(err) return done(err);
+                else if(!user){
+                    return done(null, false, {message: 'Incorrect username.'});
+                }else if(!sessionId){
+                    return done(null, false, {message: 'No sessionId obtained.'});
+                }
+                return done(null, user);
+            });
+        })
+    );
+
+    passport.serializeUser(function(user, done) {
+        console.log('serialize');
+        console.log(user);
+        done(null, user);
+    });
+
+    passport.deserializeUser(function(_id, done) {
+        console.log('deserialize');
+        done(null, _id);
+    });
+
+    var auth = function(req, res, next){
+        if(!req.isAuthenticated()) res.send(401);
+        else next();
+    };
+
+    //=======================================================
+
     // Middleware to check login status!
 //    app.use(sessionHandler.isLoggedInMiddleware);
 
@@ -18,8 +62,16 @@ module.exports = exports = function(app, db){
     app.get('/articles/:id', contentHandler.getArticle);
 
     // Login and logout
-//    app.get('/logout', TCC.logout);
-    app.post('/login', sessionHandler.handleLoginReq);
+    app.get('/loggedin', function(req, res, next){
+        res.send(req.isAuthenticated() ? req.user : '0');
+    });
+    app.post('/login', passport.authenticate('local'), function(req, res, next){
+        res.send(req.user);
+    });
+    app.post('/logout', function(req, res, next){
+        req.logOut();
+        res.send(200);
+    });
 
     // signup including checks
     app.post('/signup/check/useremail', sessionHandler.checkUserEmail);

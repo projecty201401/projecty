@@ -13,7 +13,7 @@ MongoClient.connect('mongodb://localhost:27017/projecty', function(err, db){
 
     app.use(express.bodyParser());
     app.use(express.cookieParser());
-    app.use(express.cookieSession({ secret: 'py' }));
+    app.use(express.session({ secret: 'py' }));
 
     app.use('/css', express.static(__dirname + '/public/css'));
     app.use('/js', express.static(__dirname + '/public/js'));
