@@ -70,17 +70,25 @@ angular.module('pyApp', [
             $routeProvider.otherwise({redirectTo: '/test'});
             $stateProvider.state('index', {
                 url:'/',
-                templateUrl:'partials/home.html',
+                templateUrl:'/partials/home.html',
                 controller:'HomeCtrl'
             })
+                .state('create', {
+                    url:'^/article/new',
+                    templateUrl:'/partials/newArticle.html',
+                    controller:'NewArticleCtrl',
+                    resolve:{
+                        loggedin: checkLoggedin
+                    }
+                })
                 .state('article', {
                     url:'/article/:id',
-                    templateUrl:'partials/article.html',
+                    templateUrl:'/partials/article.html',
                     controller:'ArticleCtrl'
                 })
                 .state('personal', {
                     url:'/personal',
-                    templateUrl:'partials/personal.html',
+                    templateUrl:'/partials/personal.html',
                     controller:'PersonalCtrl',
                     resolve:{
                         loggedin: checkLoggedin
@@ -88,38 +96,38 @@ angular.module('pyApp', [
                 })
                 .state('logout', {
                     url:'/logout',
-                    templateUrl:'partials/logout.html',
+                    templateUrl:'/partials/logout.html',
                     controller: 'LogoutCtrl'
                 })
                 .state('signup', {
                     url:'/signup',
-                    templateUrl:'partials/signup.html',
+                    templateUrl:'/partials/signup.html',
                     controller:'SignupCtrl'
                 })
                 .state('profile', {
                     url:'/profile',
-                    templateUrl:'partials/profile.html',
+                    templateUrl:'/partials/profile.html',
                     controller:'ProfileCtrl',
                     resolve:{
                         loggedin: checkLoggedin
                     }
                 })
                 .state('profile.account', {
-                    templateUrl:'partials/profile.account.html',
+                    templateUrl:'/partials/profile.account.html',
                     controller:'ProfileCtrl',
                     resolve:{
                         loggedin: checkLoggedin
                     }
                 })
                 .state('profile.tags', {
-                    templateUrl:'partials/profile.tags.html',
+                    templateUrl:'/partials/profile.tags.html',
                     controller:'ProfileCtrl',
                     resolve:{
                         loggedin: checkLoggedin
                     }
                 })
                 .state('profile.security', {
-                    templateUrl:'partials/profile.security.html',
+                    templateUrl:'/partials/profile.security.html',
                     controller:'ProfileCtrl',
                     resolve:{
                         loggedin: checkLoggedin

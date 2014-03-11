@@ -70,6 +70,9 @@ angular.module('pyApp.controllers', ['ui.router', 'pyApp.user', 'pyApp.factories
     .controller('PersonalCtrl', ['$scope', function($scope){
         console.log($scope);
     }])
+    .controller('NewArticleCtrl', ['$rootScope', '$scope', function($rootScope, $scope){
+        console.log($scope);
+    }])
     .controller('SignupCtrl', ['$scope', function($scope){
         $scope.isVisible = false;
 
