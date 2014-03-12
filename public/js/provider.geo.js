@@ -26,6 +26,12 @@ angular.module('pyApp.providers', [])
                 this.googleResultTypes = ['neighborhood','administrative_area_level_2','country','postal_code'];
             }
 
+            GeolocationServices.prototype.getGeoData = function(callback){
+                $.when(geoData).done(function(status, position){
+                    callback(position);
+                });
+            };
+
             GeolocationServices.prototype.formatResultArray = function(err, trigger, obj, data, status, cb){
                 if(!err && data.status === 'OK' && data.results){
                     data.results.forEach(function(val){ // ToDo: forEach-functions are blocking!
@@ -42,11 +48,6 @@ angular.module('pyApp.providers', [])
             };
 
             GeolocationServices.prototype.getInfoByGeoLoc = function(cb){
-
-                // ToDo: based on result array (keywords/tags) make call to server
-                // ToDo: based on result array sent to server find articles in db
-                // ToDo: sort articles according to predefined algorithm and return them
-
                 var that = this;
 
                 $.when(geoData).done(function(status, position){

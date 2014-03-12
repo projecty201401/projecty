@@ -2,6 +2,7 @@
 
 // Declare app level module which depends on filters, and services
 angular.module('pyApp', [
+    'google-maps',
     'ngRoute',
     'ngResource',
     'ui.router',
@@ -57,8 +58,7 @@ angular.module('pyApp', [
                         },
                         // Error: check the error status to get only the 401
                         function(response) {
-                            if (response.status === 401)
-                                $location.url('/');
+                            if (response.status === 401) $location.url('/');
                             return $q.reject(response);
                         }
                     );

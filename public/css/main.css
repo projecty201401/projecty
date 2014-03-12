@@ -235,6 +235,9 @@ input
 	text-decoration:underline;	
 }
 
+.angular-google-map-container{
+    height: 200px;
+}
 
 .temp p
 {

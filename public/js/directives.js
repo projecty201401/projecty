@@ -79,7 +79,7 @@ angular.module('pyApp.directives', []).
 
         };
     }])
-    .directive('mediumEditor', ['$rootScope', function ($rootScope) {
+    .directive('mediumEditor', ['$rootScope', function ($rootScope) { // currently not in use
         // by https://github.com/thijsw/angular-medium-editor
         return {
             require: 'ngModel',
