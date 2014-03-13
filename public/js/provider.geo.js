@@ -65,8 +65,9 @@ angular.module('pyApp.providers', [])
                                 + ',' + that.geoData.coords.longitude,
                             //'location_type': 'ROOFTOP',
                             'result_type': that.googleResultTypes[i],
-                                'sensor': true, //set in provider
-                            'key': 'AIzaSyAuu_IKdrDvud03A9hFlQqkLu03Iu-o2pU' //set as constant
+                            'sensor': true, //set in provider
+                            'key': 'AIzaSyAuu_IKdrDvud03A9hFlQqkLu03Iu-o2pU', //set as constant
+                            'language': 'en'
                         };
 
                         $http(config)
