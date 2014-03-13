@@ -73,6 +73,7 @@ angular.module('pyApp.providers', [])
                             .success(function(data, status){
                                 counter++;
                                 counter === len ? trigger = true : trigger = false;
+                                console.log(data);
                                 that.formatResultArray(null, trigger, obj, data, status, cb);
                             })
                             .error(function(data, status){
