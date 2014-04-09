@@ -1,5 +1,7 @@
 var ArticlesDAO = require('./../articles').ArticlesDAO;
 var LocationDAO = require('./../geo').LocationDAO;
+var FilesDAO = require('./../files').FilesDAO;
+var TagsDAO = require('./../tags').TagsDAO;
 var ObjectId = require('mongodb').ObjectID;
 var async = require('async');
 var path = require('path');
@@ -12,6 +14,8 @@ function ContentHandler(db){
     var that = this;
     var articles = new ArticlesDAO(db);
     var location = new LocationDAO(db);
+    var files = new FilesDAO(db);
+    var tags = new TagsDAO(db);
 
     this.displayMainPage = function(req, res, next){
         "use strict";
@@ -43,7 +47,7 @@ function ContentHandler(db){
 
     this.getArticlesByLocation = function(req, res, next){
         var q = JSON.parse(req.query.q);
-        var results = [];
+        var articlesByLoc = [];
         var keys = Object.keys(q);
 
         keys.sort(function(a, b){
@@ -52,31 +56,23 @@ function ContentHandler(db){
         async.series([
             function(callback){
                 async.each(keys, function(item, callback){
-                    var arr = [];
-
-                    if(item === 'postal_code' && q['country']){
-                        arr.push(q[item], q['country']);
-                    }else{
-                        arr.push(q[item]);
-                    }
-
-                    articles.getArticlesByLocation(arr, function(err, docs){
-                        if(err) return cb(err);
+                    articles.getArticlesByLocation(item, q, function(err, docs){
+                        if(err) return callback(err);
                         docs.forEach(function(el){
-                            results.push(el);
+                            articlesByLoc.push(el);
                         });
                         callback();
                     });
                 }, callback);
             }, function(callback){
-                that.removeDuplicateObjectsFromArray(results, '_id', function(err, arr){
+                that.removeDuplicateObjectsFromArray(articlesByLoc, '_id', function(err, arr){
                     if(err) return callback(err);
-                    results = arr;
+                    articlesByLoc = arr;
                     callback();
                 });
             }], function(err){
             if(err) return res.json(500, err);
-            res.json(200, {'results': results});
+            res.json(200, {'results': articlesByLoc});
         });
     };
 
@@ -87,6 +83,24 @@ function ContentHandler(db){
             if(err) return res.json(500, err);
             res.json(200, content);
         });
+    };
+
+    this.insertNewArticle = function(req, res, next){
+        articles.insertNewArticle(req.body, function(err, doc){
+            if(err) return res.json(500, err);
+            res.json(200, doc);
+        });
+
+        tags.insertNewTags(req.body.tags);
+    };
+
+    this.updateArticle = function(req, res, next){
+        articles.updateArticle(req.body, function(err, numUpdated){
+            if(err) return res.json(500, err);
+            res.json(200, {'numUpdated': numUpdated});
+        });
+
+        tags.insertNewTags(req.body.tags);
     };
 
     this.getGeolocation = function(req, res, next){
@@ -120,6 +134,35 @@ function ContentHandler(db){
         });
 
         callback(null, arr);
+    };
+
+    this.cropCoverImg = function(req, res, next){
+        files.cropCoverImg(req.body, function(err, obj){
+            if(err) return res.json(500, err);
+            res.json(200, obj);
+        });
+    };
+
+    this.saveImage = function(req, res, next){
+        files.saveImage(req.files.file, req.params.type, function(err, obj){
+            if(err) return res.json(500, err);
+            res.json(200, obj);
+        });
+    };
+
+    this.getTags = function(req, res, next){
+
+        // escape user input before regex
+        // http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex/6969486#6969486
+        function escapeRegExp(str) {
+            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        }
+
+        var q = escapeRegExp(req.query.q);
+        tags.getTags(q, function(err, tags){
+            if(err) return res.json(200, err);
+            res.json(200, tags);
+        });
     };
 }
 

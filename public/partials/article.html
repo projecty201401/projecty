@@ -1,5 +1,5 @@
 
-<img ng-src="/uploads/{{articleData.titleImg}}">
+<img ng-src="{{articleData.titleImg}}">
 <div class="articleLink">
 <!--    <a href="#"><img src="authors/3.jpeg" alt="Zach Hamed" class="userImage" /></a> -->
     <h1>{{articleData.title}}</h1>
@@ -15,7 +15,7 @@
         <div ng-repeat="paragraph in articleData.body">
             <div ng-switch on="paragraph.type">
                 <p name="2b37" ng-switch-when="text">{{paragraph.text}}</p>
-                <img ng-switch-when="image" ng-src="paragraph.imagePath">
+                <img ng-switch-when="image" ng-src="{{paragraph.path}}">
                 <p ng-switch-default>default</p>
             </div>
         </div>

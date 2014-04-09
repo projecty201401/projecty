@@ -1,20 +1,18 @@
-<input id="searchTextField" type="text" size="50" placeholder="Anything you want!">
-
-<google-map center="map.center" zoom="map.zoom" refresh="{{refresh}}">
-    <marker coords="marker.position"></marker>
-</google-map>
-
-<h1 class="editable">Insert header</h1>
-<p class="editable">Insert body</p>
-<script type="text/javascript">
-    var editor = new MediumEditor('.editable', {
-        anchorInputPlaceholder: 'Type a link',
-        buttons: ['bold', 'italic', 'quote'],
-        diffLeft: 25,
-        diffTop: 10,
-        firstHeader: 'h1',
-        secondHeader: 'h2',
-        delay: 0,
-        targetBlank: true
-    });
-</script>
+<cover-img cid="coverImgWrapper" imgType="coverImg"></cover-img>
+<article>
+    <h1 id="title" ng-model="title" medium-editor options='{"placeholder": "Title of your story", "disableToolbar": true, "forcePlainText": true, "disableReturn": true}'></h1>
+    <medium-button></medium-button>
+    <p ng-model="description" medium-editor options='{"placeholder": "Your story comes here...", "buttons": ["bold", "italic", "underline", "anchor", "header1", "header2", "quote", "orderedlist", "unorderedlist"]}'></p>
+    <medium-button></medium-button>
+    <br>
+    <input id="searchTextField" type="text" size="50" placeholder="Tell us where this news story takes place?">
+    <google-map center="map.center" zoom="map.zoom" refresh="{{refresh}}">
+        <marker coords="marker.position"></marker>
+    </google-map>
+    <br>
+    <tags-input ng-model="tags">
+        <auto-complete source="loadTags($query)"></auto-complete>
+    </tags-input>
+    <br>
+    <button type="button" class="btn btn-primary" ng-click="saveArticle()">Save article</button>
+</article>

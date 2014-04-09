@@ -10,8 +10,16 @@ function ArticlesDAO(db){
 
     var articlesColl = db.collection('articles');
 
-    this.getArticlesByLocation = function(arr, callback){
-        articlesColl.find({'location':{'$all': arr}}).toArray(function(err, docs){
+    this.getArticlesByLocation = function(item, obj, callback){
+        var query = {};
+        query['place.' + item] = obj[item];
+
+        if(obj['country']){
+            query['place.country'] = obj['country'];
+        }
+
+        articlesColl.find(query).toArray(function(err, docs){
+            console.log(docs);
             if(err) return callback(err, null);
             callback(null, docs);
         });
@@ -21,6 +29,36 @@ function ArticlesDAO(db){
         articlesColl.findOne({'_id': new ObjectId(_id)}, function(err, doc){
             if(err) return callback(err, null);
             callback(null, doc);
+        });
+    };
+
+    this.insertNewArticle = function(article, callback){
+        articlesColl.insert({
+            title: article.title,
+            titleImg: article.titleImg,
+            body: article.body,
+            geometry: article.geometry,
+            vicinity: article.vicinity,
+            place: article.place,
+            tags: article.tags,
+            lastModified: new Date()
+        }, function(err, doc){
+            console.log(err);
+            if(err) return callback(err, null);
+            callback(null, doc[0]);
+        });
+    };
+
+    this.updateArticle = function(article, callback){
+        var _id = new ObjectId(article._id);
+        article['$currentDate'] = {
+            lastModified: true,
+            lastModifiedTS: {$type: 'timestamp'}
+        };
+
+        articlesColl.update({'_id': _id}, {safe: true}, function(err, numUpdated){
+            if(err) return callback(err, null);
+            callback(null, numUpdated);
         });
     };
 }

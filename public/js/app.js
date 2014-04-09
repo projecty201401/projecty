@@ -1,7 +1,11 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('pyApp', [
+var app = angular.module('pyApp', [
+    'ngTagsInput',
+    'pyApp.newArticle',
+    'angular-medium-editor',
+    'angularFileUpload',
     'google-maps',
     'ngRoute',
     'ngResource',
@@ -16,13 +20,14 @@ angular.module('pyApp', [
 ]).constant('PY_APP_CONSTANTS', {
       'REGEX_EMAIL': /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b/
     }).config([
+        'tagsInputConfigProvider',
         '$httpProvider',
         '$stateProvider',
         '$routeProvider',
         '$urlRouterProvider',
         '$locationProvider',
         'geolocationProvider',
-        function($httpProvider, $stateProvider, $routeProvider, $urlRouterProvider, $locationProvider, geolocationProvider) {
+        function(tagsInputConfigProvider, $httpProvider, $stateProvider, $routeProvider, $urlRouterProvider, $locationProvider, geolocationProvider) {
             // Set geolocation data
             geolocationProvider.setGeoData();
 
@@ -48,7 +53,7 @@ angular.module('pyApp', [
                 return dfd.promise;
             };
 
-            // Add an interceptor for AJAX errors
+            // Add an interceptor for AJAX errors, deprecated method! http://docs.angularjs.org/api/ng/service/$http
             $httpProvider.responseInterceptors.push(function($q, $location) {
                 return function(promise) {
                     return promise.then(
@@ -65,6 +70,23 @@ angular.module('pyApp', [
                 }
             });
 
+            // Configuration of tagsInputConfigProvider
+            // http://mbenford.github.io/ngTagsInput/
+            tagsInputConfigProvider
+                .setDefaults('tagsInput', {
+                    placeholder: 'New tag',
+                    addOnEnter: true,
+                    addOnComma: true,
+                    addOnBlur: true,
+                    minLength: 2,
+                    maxTags: 5
+                })
+                .setDefaults('autoComplete', {
+                    maxResultsToShow: 10,
+                    minLength: 1,
+                    debounceDelay: 0
+                });
+
             // Routing starts here
             $locationProvider.html5Mode(true);
             $routeProvider.otherwise({redirectTo: '/test'});
@@ -74,12 +96,12 @@ angular.module('pyApp', [
                 controller:'HomeCtrl'
             })
                 .state('create', {
-                    url:'^/article/new',
+                    url:'^/articles/new',
                     templateUrl:'/partials/newArticle.html',
                     controller:'NewArticleCtrl',
-                    resolve:{
+                    /*resolve:{
                         loggedin: checkLoggedin
-                    }
+                    }*/
                 })
                 .state('article', {
                     url:'/article/:id',
@@ -90,9 +112,9 @@ angular.module('pyApp', [
                     url:'/personal',
                     templateUrl:'/partials/personal.html',
                     controller:'PersonalCtrl',
-                    resolve:{
+                    /*resolve:{
                         loggedin: checkLoggedin
-                    }
+                    }*/
                 })
                 .state('logout', {
                     url:'/logout',

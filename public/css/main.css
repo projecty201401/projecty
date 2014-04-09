@@ -182,6 +182,7 @@ input
 #main
 {
 	padding:15px;
+    padding-top:50px;
 }
 
 
@@ -243,4 +244,44 @@ input
 {
 	padding:20px 0;
 	line-height:150%;	
+}
+/*image cropper #1*/
+.replica_small {
+    width:120px;
+    height:80px;
+    overflow:hidden;
+}
+.replica_large {
+    width:600px;
+    height:400px;
+    overflow:hidden;
+}
+.mask {
+    display: block;
+    position: relative;
+    height: 315px;
+    width: 770px;
+    overflow: hidden;
+    text-decoration: none;
+}
+#coverImg {
+    min-width: 100%;
+    min-height: 100%;
+    position: absolute;
+    left: 0;
+}
+
+/*image cropper #2*/
+.cropper {
+    opacity: .4;
+    background: #222;
+    border: 2px solid #000;
+}
+.croppable-container {
+    border: 2px solid #333;
+}
+
+/*cover image*/
+#inputCoverImage{
+    display: none;
 }

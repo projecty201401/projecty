@@ -69,46 +69,6 @@ angular.module('pyApp.controllers', ['ui.router', 'pyApp.user', 'pyApp.factories
     .controller('PersonalCtrl', ['$scope', function($scope){
         console.log($scope);
     }])
-    .controller('NewArticleCtrl', ['$rootScope', '$scope', 'geolocation', function($rootScope, $scope, geolocation){
-        geolocation.getGeoData(function(position){
-            $scope.refresh = false;
-            $scope.map = {
-                center: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                },
-                zoom: 15
-            };
-
-            $scope.marker = {
-                position: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                }
-            };
-
-            var bounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng($scope.map.center.latitude, $scope.map.center.longitude)
-            );
-
-            var input = document.getElementById('searchTextField');
-            var options = {
-                bounds: bounds,
-                types: ['geocode']
-            };
-
-            $scope.autocomplete = new google.maps.places.Autocomplete(input, options);
-            google.maps.event.addListener($scope.autocomplete, 'place_changed', function(){
-                var place = $scope.autocomplete.getPlace();
-                console.log(place);
-                var a = $scope.marker.position.latitude = $scope.map.center.latitude = place.geometry.location.k;
-                var b = $scope.marker.position.longitude = $scope.map.center.longitude = place.geometry.location.A;
-                $scope.refresh = true;
-                $scope.$digest();
-            });
-
-        });
-    }])
     .controller('SignupCtrl', ['$scope', function($scope){
         $scope.isVisible = false;
 

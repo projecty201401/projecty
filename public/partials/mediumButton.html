@@ -1,0 +1,10 @@
+<div ng-mouseenter="toggleBtn($event)" ng-mouseleave="toggleBtn($event)">
+    <img src="/img/plus_icon.png" ng-click="toggleMenu()" ng-show="btnIsVisible">
+    <input type="file" style="display: none;" ng-file-select="onFileSelect($files)">
+    <ul ng-show="menuIsVisible">
+        <li><a ng-click="addMedium($event)">Image</a></li>
+        <li><a ng-click="addMedium($event)">Video</a></li>
+        <li><a ng-click="addMedium($event)">Social Media</a></li>
+    </ul>
+    &nbsp;
+</div>

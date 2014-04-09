@@ -60,6 +60,8 @@ module.exports = exports = function(app, db){
     // article routes
     app.get('/articles', contentHandler.getArticlesByLocation);
     app.get('/articles/:id', contentHandler.getArticle);
+    app.post('/articles/new', contentHandler.insertNewArticle);
+    app.put('/articles/:id/edit', contentHandler.updateArticle);
 
     // Login and logout
     app.get('/loggedin', function(req, res, next){
@@ -80,6 +82,12 @@ module.exports = exports = function(app, db){
     app.get('/zip/geo', contentHandler.getGeolocation);
     // route for /zip/ip
 
+    // file upload
+    app.post('/imageUpload/:type', contentHandler.saveImage);
+    app.post('/cropCoverImg', contentHandler.cropCoverImg);
+
+    // tags
+    app.get('/tags', contentHandler.getTags);
     // Others
     app.post('*', function(req, res, next){
         console.log(req);
