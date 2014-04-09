@@ -138,13 +138,14 @@ function ContentHandler(db){
 
     this.cropCoverImg = function(req, res, next){
         files.cropCoverImg(req.body, function(err, obj){
-            if(err) return res.json(500, err);
+	    if(err) return res.json(500, err);
             res.json(200, obj);
         });
     };
 
     this.saveImage = function(req, res, next){
         files.saveImage(req.files.file, req.params.type, function(err, obj){
+	    console.log(obj);
             if(err) return res.json(500, err);
             res.json(200, obj);
         });

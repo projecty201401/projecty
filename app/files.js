@@ -29,7 +29,7 @@ function FilesDAO(){
         }, function(err, img){
             if(err) return console.log(err);
             callback(null, {
-                path: UPLOAD_PATH_TAG + img.name
+                path: UPLOAD_PATH_TAG + img.name.trim() // somehow imagemagick saves images with preceding white space on ubuntu
             });
         });
     };
@@ -39,7 +39,7 @@ function FilesDAO(){
 
         this.defineFileType(file.type, function(err, fileType){
             if(err) return callback(err, null);
-
+	    
             var ext = path.extname(file.originalFilename);
             var shasum = crypto.createHash('sha1').update(file.originalFilename + '_' + new Date()).digest('hex');
             var newFileName = shasum + ext;
@@ -52,17 +52,18 @@ function FilesDAO(){
             }else{
                 // define image width according to image type
                 var imgWidth = that.defineImgWidth(imgType);
-
+		
                 // image resizing with easyimage + ImageMagick
                 easyimg.resize({
                     src: file.path,
                     dst: newPath,
                     width: imgWidth
                 }, function(err, img){
+		    console.log(img);
                     if(err) return callback(err, null);
                     callback(null, {
                         type: fileType,
-                        path: UPLOAD_PATH_TAG + img.name
+                        path: UPLOAD_PATH_TAG + img.name.trim() // somehow imagemagick saves images with preceding white space on ubuntu
                     });
                 });
             }
