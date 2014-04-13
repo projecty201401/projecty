@@ -85,7 +85,15 @@ function ContentHandler(db){
         });
     };
 
-    this.insertNewArticle = function(req, res, next){
+    this.getAuthorArticles = function(req, res, next){
+        console.log(req.query);
+        articles.getAuthorArticles(req.query._authorId, function(err, articles){
+            if(err) return res.json(500, err);
+            res.json(200, {articles: articles});
+        });
+    };
+
+        this.insertNewArticle = function(req, res, next){
         articles.insertNewArticle(req.body, function(err, doc){
             if(err) return res.json(500, err);
             res.json(200, doc);

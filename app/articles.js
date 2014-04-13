@@ -32,8 +32,19 @@ function ArticlesDAO(db){
         });
     };
 
+    this.getAuthorArticles = function(_authorId, callback){
+        var options = {
+            'sort': [['lastModified', 'asc']]
+        };
+        articlesColl.find({'_authorId': _authorId}, options).toArray(function(err, articles){
+            if(err) return callback(err, null);
+            callback(null, articles);
+        });
+    };
+
     this.insertNewArticle = function(article, callback){
         articlesColl.insert({
+            _authorId: article._authorId,
             title: article.title,
             titleImg: article.titleImg,
             body: article.body,

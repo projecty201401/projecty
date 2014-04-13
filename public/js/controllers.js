@@ -66,8 +66,12 @@ angular.module('pyApp.controllers', ['ui.router', 'pyApp.user', 'pyApp.factories
             });
         });
     }])
-    .controller('PersonalCtrl', ['$scope', function($scope){
-        console.log($scope);
+    .controller('PersonalCtrl', ['$scope', 'article', function($scope, article){
+        article.getAuthorArticle({'_authorId': 'n.scheurecker@gmail.com'}, function(response, headers){
+            $scope.articles = response.articles;
+        }, function(){
+            console.log('error');
+        });
     }])
     .controller('SignupCtrl', ['$scope', function($scope){
         $scope.isVisible = false;

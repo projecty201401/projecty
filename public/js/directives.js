@@ -78,4 +78,41 @@ angular.module('pyApp.directives', []).
             }
 
         };
+    }])
+    .directive('authorArticle', [function(){
+        return {
+            transclude: true,
+            restrict: 'A',
+            scope: {
+
+            },
+            controller: ['$scope', '$element', '$attrs', '$transclude',
+                function($scope, $element, $attrs, $transclude){
+
+            }],
+            link: function(scope, element, attrs, ctrl){
+                element.attr('draggable', 'true');
+                element.draggable({
+                    revert: 'invalid',
+                    helper: 'clone'
+                });
+            }
+        };
+    }])
+    .directive('authorCollection', [function(){
+        return {
+            restrict: 'A',
+            scope: {
+
+            },
+            controller: ['$scope', '$element', '$attrs', '$transclude',
+                function($scope, $element, $attrs, $transclude){
+
+                }],
+            link: function(scope, element, attrs, ctrl){
+                element.droppable({
+                    accept: '.authorArticle'
+                });
+            }
+        };
     }]);

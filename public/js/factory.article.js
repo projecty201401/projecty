@@ -15,6 +15,14 @@ angular.module('pyApp.factories', ['ngResource'])
                     id: '@_id',
                     action: 'edit'
                 }
+            },
+            getAuthorArticle: {
+                method: 'GET',
+                url: '/author/articles',
+                params: {
+                    _authorId: 'not_defined'
+                },
+                isArray: false
             }
         });
     }]);

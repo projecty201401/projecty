@@ -57,9 +57,31 @@ angular.module('pyApp.newArticle', ['ui.router', 'pyApp.user', 'pyApp.factories'
 
             $scope.saveArticle = function(){
                 var artObj = {};
-                var body = [];
+                artObj.body = [];
                 var articleTag = $('article');
-                var place = $scope.autocomplete.getPlace();
+
+                try{
+                    var place = $scope.autocomplete.getPlace();
+                    artObj.latlng = $scope.autocomplete.getBounds();
+                    artObj.geometry = {
+                        type: 'Point',
+                        coordinates: [place.geometry.location.k, place.geometry.location.A]
+                    };
+                    artObj.vicinity = place.vicinity;
+                    artObj.place = {};
+                    place.address_components.forEach(function(el){
+                        artObj.place[el.types[0]] = el.long_name;
+                    });
+                }catch(errPlace){
+                    console.log(errPlace);
+                }
+                artObj.title = $('#title').text();
+                artObj.titleImg = $('#croppedCoverImg').attr('src');
+                artObj._authorId = 'n.scheurecker@gmail.com'; // ToDo: read from cookie/token!
+                artObj.tags = [];
+                $scope.tags.forEach(function(t){
+                    artObj.tags.push(t.text);
+                });
 
                 if(articleTag){
                     articleTag.find('p, figure, video').each(function(i, el){
@@ -67,7 +89,7 @@ angular.module('pyApp.newArticle', ['ui.router', 'pyApp.user', 'pyApp.factories'
                         // find meditor elements
                         if($(el).data('medium-element')){
                             $(el).find('p').each(function(x, p, a){
-                                body.push({
+                                artObj.body.push({
                                     'type': 'text',
                                     'text': p.innerHTML
                                 });
@@ -75,38 +97,18 @@ angular.module('pyApp.newArticle', ['ui.router', 'pyApp.user', 'pyApp.factories'
 
                             // find img elements
                         }else if($(el).find('img').length > 0){
-                            body.push({
+                            artObj.body.push({
                                 'type': 'image',
                                 'path': $($(el).find('img')[0]).attr('src')
                             });
 
                             // find video tags
                         }else if($(el).prop('tagName') === 'VIDEO'){
-                            body.push({
+                            artObj.body.push({
                                 'type': 'video',
                                 'path': $(el).find('video')[0].attr('src')
                             });
                         }
-                    });
-
-                    artObj.body = body;
-                    artObj.title = $('#title').text();
-                    artObj.titleImg = $('#croppedCoverImg').attr('src');
-                    artObj.latlng = $scope.autocomplete.getBounds();
-                    artObj.geometry = {
-                        type: 'Point',
-                        coordinates: [place.geometry.location.k, place.geometry.location.A]
-                    };
-                    artObj.vicinity = place.vicinity;
-
-                    artObj.place = {};
-                    place.address_components.forEach(function(el){
-                        artObj.place[el.types[0]] = el.long_name;
-                    });
-
-                    artObj.tags = [];
-                    $scope.tags.forEach(function(t){
-                        artObj.tags.push(t.text);
                     });
 
                     if($location.path().split('/')[2] === 'new'){

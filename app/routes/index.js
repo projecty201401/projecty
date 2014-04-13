@@ -63,6 +63,9 @@ module.exports = exports = function(app, db){
     app.post('/articles/new', contentHandler.insertNewArticle);
     app.put('/articles/:id/edit', contentHandler.updateArticle);
 
+    // author specific routes
+    app.get('/author/articles', contentHandler.getAuthorArticles);
+
     // Login and logout
     app.get('/loggedin', function(req, res, next){
         res.send(req.isAuthenticated() ? req.user : '0');

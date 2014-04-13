@@ -1,2 +1,9 @@
+<div ng-repeat="article in articles" author-article class="authorArticle" ng-transclude>
+    <div>
+        <div>{{article.title}}</div>
+    </div>
+</div>
+<!---------ToDo: create collection, delete collection, drop box, on drop save to collection--------->
 <h1>This is the author's personal page.</h1>
 <a ui-sref="create">Click here to create a new article.</a>
+<div author-collection>Collection</div>
